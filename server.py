@@ -13,12 +13,32 @@ def loadCompetitions():
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
 
+def initialize_places(comps, clubs_list):
+    places = []
+    for comp in comps:
+        for club in clubs_list:
+            places.append({'competition': comp['name'], 'booked': [0, club['name']]})
+
+    return places
+
+
+def update_places(competition, club, places, placesRequired):
+    for elem in places:
+        if elem['competition'] == competition['name']:
+            if elem['booked'][1] == club['name'] and elem['booked'][0] + placesRequired <= 12:
+                elem['booked'][0] += placesRequired
+                break
+            else:
+                raise ValueError("Vous ne pouvez pas réserver plus de 12 places")
+
+    return places
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
 competitions = loadCompetitions()
 clubs = loadClubs()
+places = initialize_places(competitions, clubs)
 
 @app.route('/')
 def index():
@@ -45,10 +65,35 @@ def book(competition,club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+
+    try:
+        placesRequired = int(request.form['places'])
+        if placesRequired > int(competition['numberOfPlaces']):
+            flash('Pas assez de place disponible')
+            status_code = 400
+
+        elif placesRequired * 4 > int(club['points']):
+            flash('Pas assez de place disponible')
+            status_code = 400
+
+        else:
+            try:
+                update_places(competition, club, places, placesRequired)
+                competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+
+                #### A club secretary wishes to redeem points for a place in a competition
+                club['points'] = int(club['points'])-placesRequired
+                flash('Great-booking complete!')
+                return render_template('welcome.html', club=club, competitions=competitions)
+
+            except ValueError as error_message:
+                flash(error_message, 'error')
+                status_code = 400
+
+    except ValueError:
+        flash('Saisir un nombre entre 1 et 12.', 'error')
+
+    return render_template('booking.html', club=club, competition=competition), status_code
 
 
 # TODO: Add route for points display
