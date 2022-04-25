@@ -20,7 +20,7 @@ class TestPointUpdate:
         }
     ]
 
-    def test_club_points(self):
+    def test_points(self):
         club_points = int(server.clubs[0]["points"])
         placesRequired = 8
         rv = self.client.post(
@@ -31,12 +31,37 @@ class TestPointUpdate:
                 "competition": server.competitions[0]["name"]
             }
         )
-
         assert rv.status_code == 200
         assert "Great-booking complete!" in rv.data.decode()
         assert int(server.clubs[0]["points"]) == club_points - placesRequired 
 
-    def test_empty_field(self):
+    def test_greater(self):
+        placesRequired = 13
+        rv = self.client.post(
+            "/purchasePlaces",
+            data={
+                "places": placesRequired,
+                "club": server.clubs[0]["name"],
+                "competition": server.competitions[0]["name"]
+            }
+        )
+        assert rv.status_code == 400
+        assert "Saisir un nombre entre 0 et 12, Veuillez recommencer" in rv.data.decode()
+
+    def test_leather(self):
+        placesRequired = -2
+        rv = self.client.post(
+            "/purchasePlaces",
+            data={
+                "places": placesRequired,
+                "club": server.clubs[0]["name"],
+                "competition": server.competitions[0]["name"]
+            }
+        )
+        assert rv.status_code == 400
+        assert "Saisir un nombre entre 0 et 12, Veuillez recommencer" in rv.data.decode()
+
+    def test_equal_blank(self):
         placesRequired = ""
         rv = self.client.post(
             "/purchasePlaces",
@@ -46,6 +71,5 @@ class TestPointUpdate:
                 "competition": server.competitions[0]["name"]
             }
         )
-
-        assert rv.status_code == 400
-        assert "Saisir un nombre entre 1 et 12, Veuillez recommencer" in rv.data.decode()
+        assert rv.status_code == 200
+        assert "Great-booking complete!" in rv.data.decode()
