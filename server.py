@@ -35,16 +35,15 @@ def showSummary():
 def book(competition,club):
     foundclub = [c for c in clubs if c['name'] == club][0]
 
+    # Booking_places_in_past_competition
     try:
         foundcompetition = [c for c in competitions if c['name'] == competition][0]
 
         if datetime.strptime(foundcompetition['date'], '%Y-%m-%d %H:%M:%S') < datetime.now():
             flash("Cette competition est déjà terminée.", 'error')
             status_code = 400
-
         else:
             return render_template('booking.html', club=foundclub, competition=foundcompetition)
-
     except IndexError:
         flash("Il y a un dysfonctionnement, Veuillez recommencer", 'error')
         status_code = 404
