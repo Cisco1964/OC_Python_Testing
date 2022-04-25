@@ -29,7 +29,7 @@ class TestMorePoints:
         rv = self.client.post(
             "/purchasePlaces",
             data={
-                "places": 7,
+                "places": 14,
                 "club": self.club[0]["name"],
                 "competition": self.competition[0]["name"]
             }
