@@ -46,16 +46,22 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
        
-    try: 
+    #### A club secretary wishes to redeem points for a place in a competition
+    
+    if request.form['places'] == "":
+        placesRequired = 0
+    else:
         placesRequired = int(request.form['places'])
-    except ValueError:
-         flash("Saisir un nombre entre 1 et 12, Veuillez recommencer")
-         status_code = 400
-         return render_template('booking.html', club=club, competition=competition), status_code
+        
+    print("placesRequired", placesRequired)
+    if placesRequired < 0 or placesRequired > 12:
+        flash("Saisir un nombre entre 0 et 12, Veuillez recommencer")
+        status_code = 400
+        return render_template('booking.html', club=club, competition=competition), status_code
 
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    #### A club secretary wishes to redeem points for a place in a competition
     club['points'] = int(club['points'])-placesRequired
+
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
