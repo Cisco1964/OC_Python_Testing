@@ -20,17 +20,17 @@ class TestMore12Points:
         }
     ]
 
-    places_booked = [
+    places = [
         {
-            "competition": "Test",
-            "booked": [5, "Test club"]
+            "competition": "Competition",
+            "booked": [8, "Club"]
         }
     ]
 
     def setup_method(self):
         server.competitions = self.competition
         server.clubs = self.club
-        server.places_booked = self.places_booked
+        server.places = self.places
 
     def test_more_12_once(self):
         placesRequired = 13
@@ -43,10 +43,10 @@ class TestMore12Points:
                 "competition": self.competition[0]["name"]
             }
         )
-        assert "Pas assez de place disponible" in rv.data.decode()
+        assert "Vous ne pouvez pas reserver plus de 12 places" in rv.data.decode()
         assert rv.status_code == 400
 
-    def test_more_12_added(self):
+    def test_more_12_add(self):
         placesRequired = 10
 
         rv = self.client.post(
@@ -58,4 +58,4 @@ class TestMore12Points:
             }
         )
         assert rv.status_code == 400
-        assert "Pas assez de place disponible" in rv.data.decode()
+        assert "Vous ne pouvez pas reserver plus de 12 places" in rv.data.decode()
