@@ -46,14 +46,12 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
        
-    #### A club secretary wishes to redeem points for a place in a competition
-    
+    #### Point updates are not reflected
     if request.form['places'] == "":
         placesRequired = 0
     else:
         placesRequired = int(request.form['places'])
-        
-    print("placesRequired", placesRequired)
+
     if placesRequired < 0 or placesRequired > 12:
         flash("Saisir un nombre entre 0 et 12, Veuillez recommencer")
         status_code = 400
