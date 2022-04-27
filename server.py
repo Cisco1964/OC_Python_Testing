@@ -90,7 +90,11 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
 
-    placesRequired = int(request.form['places'])
+
+    if request.form['places'] == "":
+        placesRequired = 0
+    else:
+        placesRequired = int(request.form['places'])
 
     # Clubs_use_more_than_their_points_allowed
     if placesRequired > int(club['points']):
@@ -107,8 +111,12 @@ def purchasePlaces():
         flash('Vous ne pouvez pas reserver plus de 12 places')
         status_code = 400
         return render_template('booking.html', club=club, competition=competition), status_code
+    #### Point updates are not reflected
+    elif placesRequired < 0 or placesRequired > 12:
+        flash("Saisir un nombre entre 0 et 12, Veuillez recommencer")
+        status_code = 400
+        return render_template('booking.html', club=club, competition=competition), status_code
     else:
-
         try:
             # Sauvegarde du nombre de reservations par club et par competition
             update_places(competition, club, places, placesRequired)
@@ -120,7 +128,6 @@ def purchasePlaces():
             flash(error_message)
             status_code = 400
             return render_template('booking.html', club=club, competition=competition), status_code
-
 
 # TODO: Add route for points display
 
