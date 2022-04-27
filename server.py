@@ -20,12 +20,30 @@ def init_places(comps, clubs):
             mylist.append({'competition': comp['name'], 'booked': [0, club['name']]})
     return mylist
 
+def init_places(comps, clubs_list):
+    places = []
+    for comp in comps:
+        for club in clubs_list:
+            places.append({'competition': comp['name'], 'booked': [0, club['name']]})
+    return places
+
+
+def update_places(competition, club, places, placesRequired):
+    for elem in places:
+        if elem['competition'] == competition['name']:
+            if elem['booked'][1] == club['name'] and elem['booked'][0] + placesRequired <= 12:
+                elem['booked'][0] += placesRequired
+                break
+            else:
+                raise ValueError("Vous ne pouvez pas reserver plus de 12 places")
+    return places
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
 competitions = loadCompetitions()
 clubs = loadClubs()
+places = init_places(competitions, clubs)
 
 @app.route('/')
 def index():
@@ -70,9 +88,28 @@ def purchasePlaces():
         status_code = 400
         return render_template('booking.html', club=club, competition=competition), status_code
 
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    club['points'] = int(club['points'])-placesRequired
-    return render_template('welcome.html', club=club, competitions=competitions)
+    #competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+    #club['points'] = int(club['points'])-placesRequired
+    #return render_template('welcome.html', club=club, competitions=competitions)
+
+    # More_than_12_places_per_competition
+    elif placesRequired > 12:
+        flash('Vous ne pouvez pas reserver plus de 12 places')
+        status_code = 400
+        return render_template('booking.html', club=club, competition=competition), status_code
+    else:
+
+        try:
+            # Sauvegarde du nombre de reservations par club et par competition
+            update_places(competition, club, places, placesRequired)
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+            club['points'] = int(club['points'])-placesRequired
+            return render_template('welcome.html', club=club, competitions=competitions)
+        except ValueError as error_message:
+            # Retour message d'erreur --> on ne peut pas réserver plus de 12 places par compétition
+            flash(error_message)
+            status_code = 400
+            return render_template('booking.html', club=club, competition=competition), status_code
 
 
 # TODO: Add route for points display
