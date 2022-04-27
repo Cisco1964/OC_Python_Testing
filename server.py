@@ -129,7 +129,13 @@ def purchasePlaces():
             status_code = 400
             return render_template('booking.html', club=club, competition=competition), status_code
 
-# TODO: Add route for points display
+
+
+# Affichage de la liste des clubs avec leur point
+@app.route('/clubpoints')
+def clubpoints():
+    clublist = sorted(clubs, key=lambda club: club['name'])
+    return render_template('club_points.html', clubs=clublist)
 
 
 @app.route('/logout')
