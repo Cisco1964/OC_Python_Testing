@@ -13,6 +13,13 @@ def loadCompetitions():
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
 
+def init_places(comps, clubs):
+    mylist = []
+    for comp in comps:
+        for club in clubs:
+            mylist.append({'competition': comp['name'], 'booked': [0, club['name']]})
+    return mylist
+
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
@@ -54,9 +61,17 @@ def book(competition,club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
+
     placesRequired = int(request.form['places'])
+
+    # Clubs_use_more_than_their_points_allowed
+    if placesRequired > int(club['points']):
+        flash('Pas assez de place disponible')
+        status_code = 400
+        return render_template('booking.html', club=club, competition=competition), status_code
+
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
+    club['points'] = int(club['points'])-placesRequired
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
