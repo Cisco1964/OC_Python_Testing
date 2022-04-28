@@ -101,12 +101,6 @@ def purchasePlaces():
         flash('Pas assez de place disponible')
         status_code = 400
         return render_template('booking.html', club=club, competition=competition), status_code
-
-    #competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    #club['points'] = int(club['points'])-placesRequired
-    #return render_template('welcome.html', club=club, competitions=competitions)
-
-    # More_than_12_places_per_competition
     elif placesRequired > 12:
         flash('Vous ne pouvez pas reserver plus de 12 places')
         status_code = 400
