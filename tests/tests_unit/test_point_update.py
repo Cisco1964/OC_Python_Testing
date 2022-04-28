@@ -71,5 +71,5 @@ class TestPointUpdate:
                 "competition": server.competitions[0]["name"]
             }
         )
-        assert rv.status_code == 200
-        assert "Great-booking complete!" in rv.data.decode()
+        assert rv.status_code == 400
+        assert "Saisir un nombre entre 0 et 12, Veuillez recommencer" in rv.data.decode()
