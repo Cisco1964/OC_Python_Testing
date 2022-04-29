@@ -49,15 +49,11 @@ def purchasePlaces():
     #### Point updates are not reflected
     try:
         placesRequired = int(request.form['places'])
-        if placesRequired < 0 or placesRequired > 12:
-            flash("Saisir un nombre entre 0 et 12, Veuillez recommencer")
-            status_code = 400
-            return render_template('booking.html', club=club, competition=competition), status_code
-        else:
-            competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-            club['points'] = int(club['points'])-placesRequired
-            flash('Great-booking complete!')
-            return render_template('welcome.html', club=club, competitions=competitions)
+       
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        club['points'] = int(club['points'])-placesRequired
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
     except ValueError:
         flash("Saisir un nombre entre 0 et 12, Veuillez recommencer")
         status_code = 400
