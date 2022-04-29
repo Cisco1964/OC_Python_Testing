@@ -53,7 +53,8 @@ def purchasePlaces():
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         club['points'] = int(club['points'])-placesRequired
         flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
+        status_code = 200
+        return render_template('welcome.html', club=club, competitions=competitions), status_code
     except ValueError:
         flash("Saisir un nombre entre 0 et 12, Veuillez recommencer")
         status_code = 400
