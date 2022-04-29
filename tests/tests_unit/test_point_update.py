@@ -22,7 +22,7 @@ class TestPointUpdate:
 
     def test_points(self):
         club_points = int(server.clubs[0]["points"])
-        placesRequired = 4
+        placesRequired = 3
         rv = self.client.post(
             "/purchasePlaces",
             data={
