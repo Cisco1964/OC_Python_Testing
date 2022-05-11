@@ -5,6 +5,17 @@ from server import app
 class TestUnknownEmail:
     client = app.test_client()
 
+    club = [
+        {
+            "name": "Club",
+            "email": "toto@gmail.com",
+            "points": "13"
+        }
+    ]
+
+    def setup_method(self):
+        server.clubs = self.club
+
     def test_valid_email(self):
         result = self.client.post("/showSummary", data={"email": server.clubs[0]["email"]})
         assert result.status_code == 200
