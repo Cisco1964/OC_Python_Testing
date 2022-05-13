@@ -24,11 +24,12 @@ def init_places(comps, clubs_list):
 def update_places(competition, club, places, placesRequired):
     for elem in places:
         if elem['competition'] == competition['name']:
-            if elem['booked'][1] == club['name'] and elem['booked'][0] + placesRequired <= 12:
-                elem['booked'][0] += placesRequired
-                break
-            else:
-                raise ValueError("Vous ne pouvez pas reserver plus de 12 places")
+            if elem['booked'][1] == club['name'] :
+                if elem['booked'][0] + placesRequired <= 12:
+                    elem['booked'][0] += placesRequired
+                    break
+                else:
+                    raise ValueError("Vous ne pouvez pas reserver plus de 12 places")
     return places
 
 app = Flask(__name__)
