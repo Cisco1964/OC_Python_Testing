@@ -21,22 +21,26 @@ def init_places(comps, clubs):
             mylist.append({'competition': comp['name'], 'booked': [0, club['name']]})
     return mylist
 
-def init_places(comps, clubs_list):
-    places = []
-    for comp in comps:
-        for club in clubs_list:
-            places.append({'competition': comp['name'], 'booked': [0, club['name']]})
-    return places
-
 
 def update_places(competition, club, places, placesRequired):
     for elem in places:
+        print("OK2")
+        print("elem", elem)
+        print("places", places)
         if elem['competition'] == competition['name']:
-            if elem['booked'][1] == club['name'] and elem['booked'][0] + placesRequired <= 12:
-                elem['booked'][0] += placesRequired
-                break
-            else:
-                raise ValueError("Vous ne pouvez pas reserver plus de 12 places")
+
+            print("elem['competition']", elem['competition'])
+            print("competition['name']", competition['name'])
+            print("elem['booked'][1]", elem['booked'][1])
+            print("club['name']", club['name'])
+            print("placesRequired", placesRequired)
+
+            if elem['booked'][1] == club['name']:
+                if elem['booked'][0] + placesRequired <= 12:
+                    elem['booked'][0] += placesRequired
+                    break
+                else:
+                    raise ValueError("Vous ne pouvez pas reserver plus de 12 places")
     return places
 
 app = Flask(__name__)
@@ -45,6 +49,7 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 places = init_places(competitions, clubs)
+print("PLACES", places)
 
 @app.route('/')
 def index():
@@ -100,6 +105,7 @@ def purchasePlaces():
             status_code = 400
             return render_template('booking.html', club=club, competition=competition), status_code
         elif placesRequired > 12:
+            print("OK1")
             flash('Vous ne pouvez pas reserver plus de 12 places')
             status_code = 400
             return render_template('booking.html', club=club, competition=competition), status_code
