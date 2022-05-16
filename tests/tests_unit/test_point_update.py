@@ -20,21 +20,6 @@ class TestPointUpdate:
         }
     ]
 
-    def test_points(self):
-        club_points = int(server.clubs[0]["points"])
-        placesRequired = 3
-        rv = self.client.post(
-            "/purchasePlaces",
-            data={
-                "places": placesRequired,
-                "club": server.clubs[0]["name"],
-                "competition": server.competitions[0]["name"]
-            }
-        )
-        assert rv.status_code == 200
-        assert "Great-booking complete!" in rv.data.decode()
-        assert int(server.clubs[0]["points"]) == club_points - placesRequired 
-
     def test_equal_blank(self):
         placesRequired = ""
         rv = self.client.post(

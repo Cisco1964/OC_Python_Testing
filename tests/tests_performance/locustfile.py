@@ -23,7 +23,6 @@ class ProjectPerfTest(HttpUser):
         self.client.get('/')
         response = self.client.post('/showSummary', {'email': self.club[0]["email"]}, 
             name="/showSummary")
-        print("RESPONSE", response.status_code)
         
 
     def on_stop(self):
@@ -32,43 +31,25 @@ class ProjectPerfTest(HttpUser):
 
     @task(1)
     def booking(self):
-        #s = f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}"
-        #s = s.replace('%20',' ')
-        #rv = self.client.get(
-        #        s, 
-        #        name="book"
-        #)
-        rv = "/book/Spring Festival/She Lifts"
+        #with self.client.get("/book/Spring Festival/She Lifts", catch_response=True) as response:
+        rv = f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}"
         rv = rv.replace('%20', ' ')
-        #self.client.get(rv, name=rv)
-        
-        #print("RV", rv.status_code)
-        #print("type RV", type(rv))
-        with self.client.get("/book/Spring Festival/She Lifts", catch_response=True) as response:
-            if response.status_code != 401:
-                response.failure("Got unexpected response code: " + str(response.status_code) + " Error: " + str(response.text))
+        with self.client.get(rv, catch_response=True) as response:
+            if response.status_code != 200:
+                response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
             else:
-                print("401 Test passed")
+                print(f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}", "Test OK")
         response.success() 
 
     @task(1)
     def purchase(self): 
-        #self.client.post(
-          #  "/purchasePlaces",
-            #data={"places": 5, 
-                  #"club": self.club[0]["name"], 
-                  #"club": "She Lifts", 
-                  #"competition": self.competitions[0]["name"]}, 
-                   #"competition": "Spring Festival"},
-            #name="/purchasePlaces"
-        #)
         with self.client.post("/purchasePlaces", data={"places": 5, 
-                  "club": "She Lifts", 
-                   "competition": "Spring Festival"}, catch_response=True) as response:
-            if response.status_code != 401:
-                response.failure("Got unexpected response code: " + str(response.status_code) + " Error: " + str(response.text))
+                  "club": self.club[0]['name'], 
+                   "competition": self.competitions[0]['name']}, catch_response=True) as response:
+            if response.status_code != 200:
+                response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
             else:
-                print("401 Test passed")
+                print("/purchasePlaces : Test OK")
         response.success() 
 
 class WebsiteUser(HttpUser):
