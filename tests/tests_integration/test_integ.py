@@ -52,7 +52,7 @@ class Testintegration:
 
     def test_points(self):
         club_points = int(server.clubs[0]["points"])
-        placesRequired = 3
+        placesRequired = 1
         rv = self.client.post(
             "/purchasePlaces",
             data={
@@ -63,4 +63,9 @@ class Testintegration:
         )
         assert rv.status_code == 200
         assert "Great-booking complete!" in rv.data.decode()
-        assert int(server.clubs[0]["points"]) == club_points - placesRequired 
+        assert int(server.clubs[0]["points"]) == club_points - (placesRequired * 3)
+        
+
+    def test_logout(self):
+        rv = self.client.get('/logout')
+        assert rv.status_code == 302
