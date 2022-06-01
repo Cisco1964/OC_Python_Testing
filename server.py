@@ -101,8 +101,15 @@ def purchasePlaces():
             try:
                 # Sauvegarde du nombre de reservations par club et par competition
                 update_places(competition, club, places, placesRequired)
-                competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-                club['points'] = int(club['points'])-placesRequired
+                competition['numberOfPlaces'] = int(competition['numberOfPlaces'])- placesRequired
+
+                # Bonjour à tous Je viens de terminer une conférence téléphonique avec 
+                # l'équipe régionale, et il semble qu'il n'y ait pas un seul point / place. 
+                # Il s'agit de 3 points/place. Je ne sais pas si cela change quelque chose, 
+                # mais j'ai besoin que vous mettez ça en place pour la démo. 
+                # Ils vont être très contents !
+
+                club['points'] = int(club['points'])- (placesRequired *  3)
                 flash("Great-booking complete!")
                 status_code = 200
                 return render_template('welcome.html', club=club, competitions=competitions), status_code
