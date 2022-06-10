@@ -61,7 +61,7 @@ pytest -v
 
 Le tests de couverture est éxécuté avec pytest. Suite à son éxécution, un dossier nommé htmlcov est créer, il faut ouvrir le fichier index.html avec n'importe quel navigateur pour consulter les résultats
 ```
-py.test --cov=tests --cov-report=html tests/tests_*/*.py
+pytest --cov=tests --cov-report=html tests/tests_*/*.py
 ```
 
 ### Test de performances
