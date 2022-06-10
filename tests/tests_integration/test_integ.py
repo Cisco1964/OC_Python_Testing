@@ -61,11 +61,37 @@ class Testintegration:
                 "competition": server.competitions[0]["name"]
             }
         )
+       
+
         assert rv.status_code == 200
         assert "Great-booking complete!" in rv.data.decode()
         assert int(server.clubs[0]["points"]) == club_points - (placesRequired * 3)
+
+        rv = self.client.get('/clubpoints')
+        
+        assert f"<td>{server.clubs[0]['name']}</td>" in rv.data.decode()
+        assert f"<td>{club_points - placesRequired * 3}</td>" in rv.data.decode()
+
+    # def test_point_update(self):
+    #     club_points = int(server.clubs[0]["points"])
+    #     placesRequired = 1
+
+    #     self.client.post(
+    #         "/purchasePlaces",
+    #         data={
+    #             "places": placesRequired,
+    #             "club": server.clubs[0]["name"],
+    #             "competition": server.competitions[0]["name"]
+    #         }
+    #     )
+
+    #     rv = self.client.get('/clubpoints')
+
+    #     assert rv.status_code == 200
+    #     assert f"<td>{server.clubs[0]['name']}</td>" in rv.data.decode()
+    #     assert f"<td>{club_points - placesRequired * 3}</td>" in rv.data.decode()
         
 
-    def test_logout(self):
-        rv = self.client.get('/logout')
-        assert rv.status_code == 302
+    # def test_logout(self):
+    #     rv = self.client.get('/logout')
+    #     assert rv.status_code == 302
