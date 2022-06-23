@@ -89,7 +89,7 @@ def purchasePlaces():
         placesRequired = int(request.form['places'])
 
         # Clubs_use_more_than_their_points_allowed
-        if placesRequired > int(club['points']):
+        if placesRequired * 3 > int(club['points']):
             flash('Pas assez de place disponible')
             status_code = 400
             return render_template('booking.html', club=club, competition=competition), status_code
