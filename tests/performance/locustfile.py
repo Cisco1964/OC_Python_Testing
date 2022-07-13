@@ -37,12 +37,6 @@ class ProjectPerfTest(HttpUser):
         rv = rv.replace('%20', ' ')
         self.client.get(rv) 
 
-        # with self.client.get(rv, catch_response=True) as response:
-        #     if response.status_code != 200:
-        #         response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
-        #     else:
-        #         print(f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}", "Test OK")
-        # response.success() 
 
     # @task(1)
     @task
