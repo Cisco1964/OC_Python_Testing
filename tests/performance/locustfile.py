@@ -4,6 +4,7 @@ from turtle import delay
 from locust import HttpUser, task, between
 
 class ProjectPerfTest(HttpUser):
+    wait_time = between(5, 20)
     competitions = [
         {
             "name": "Spring Festival",
@@ -29,29 +30,51 @@ class ProjectPerfTest(HttpUser):
         self.client.get('/logout')
 
 
-    @task(1)
+    @task
     def booking(self):
         #with self.client.get("/book/Spring Festival/She Lifts", catch_response=True) as response:
         rv = f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}"
         rv = rv.replace('%20', ' ')
-        with self.client.get(rv, catch_response=True) as response:
-            if response.status_code != 200:
-                response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
-            else:
-                print(f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}", "Test OK")
-        response.success() 
+        self.client.get(rv) 
 
-    @task(1)
+        # with self.client.get(rv, catch_response=True) as response:
+        #     if response.status_code != 200:
+        #         response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
+        #     else:
+        #         print(f"/book/{self.competitions[0]['name']}/{self.club[0]['name']}", "Test OK")
+        # response.success() 
+
+    # @task(1)
+    @task
     def purchase(self): 
-        with self.client.post("/purchasePlaces", data={"places": 5, 
-                  "club": self.club[0]['name'], 
-                   "competition": self.competitions[0]['name']}, catch_response=True) as response:
-            if response.status_code != 200:
-                response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
-            else:
-                print("/purchasePlaces : Test OK")
-        response.success() 
+        # self.client.post("/purchasePlaces", 
+        #             data={"places": 1, 
+        #             "club": self.club[0]['name'], 
+        #             "competition": self.competitions[0]['name']}) 
 
-class WebsiteUser(HttpUser):
-    task_set = ProjectPerfTest
-    wait_time = between(5, 20)
+        self.client.post(
+            "/purchasePlaces",
+            data={
+                "places": 0,
+                "club": self.club[0]["name"],
+                "competition": self.competitions[0]["name"]
+            }
+        )
+
+    @task
+    def clubpoint(self):
+        self.client.get("/clubpoints")
+    
+
+        # with self.client.post("/purchasePlaces", data={"places": 1, 
+        #           "club": self.club[0]['name'], 
+        #            "competition": self.competitions[0]['name']}, catch_response=True) as response:
+        #     if response.status_code != 200:
+        #         response.failure("Erreur inattendue : " + str(response.status_code) + " Erreur: " + str(response.text))
+        #     else:
+        #         print("/purchasePlaces : Test OK")
+        # response.success() 
+
+#class WebsiteUser(HttpUser):
+    #task_set = ProjectPerfTest
+    #wait_time = between(5, 20)
