@@ -50,7 +50,7 @@ class TestMorePoints:
         )
 
         assert rv.status_code == 400
-        assert "Vous ne pouvez pas reserver plus de 12 places" in rv.data.decode()
+        assert "Pas assez de place disponible" in rv.data.decode()
         assert int(self.club[0]["points"]) >= 0
 
     def test_more_points(self):
@@ -65,5 +65,5 @@ class TestMorePoints:
         )
 
         assert rv.status_code == 400
-        assert "Pas assez de place disponible" in rv.data.decode()
+        assert "Vous ne pouvez pas reserver plus de 12 places" in rv.data.decode()
         
