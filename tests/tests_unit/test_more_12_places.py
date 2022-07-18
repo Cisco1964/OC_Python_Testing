@@ -58,4 +58,5 @@ class TestMore12Points:
             }
         )
         assert rv.status_code == 400
-        assert "Vous ne pouvez pas reserver plus de 12 places" in rv.data.decode()
+        #assert "Vous ne pouvez pas reserver plus de 12 places" in rv.data.decode()
+        assert "Pas assez de place disponible" in rv.data.decode()
