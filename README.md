@@ -71,3 +71,11 @@ Le test de performance est éxécuté avec locust
 locust -f tests/performance/locustfile.py --host=http://localhost:5000
 ```
 Accéder au site de performance à l'adresse http://localhost:8089
+
+### Rapports
+
+Les captures d'écran des rapports de tests sont disponibles dans le dossier rapport.
+
+- P11_Image taux de couverture.png (84% de couverture)
+
+- Test performance.png (6 utilisateurs, 1 par seconde)
