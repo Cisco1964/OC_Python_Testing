@@ -64,7 +64,7 @@ Le tests de couverture est éxécuté avec pytest. Suite à son éxécution, un 
 pytest --cov=tests --cov-report=html tests/tests_*/*.py
 ```
 
-### Test de performances
+### Test de performance
 
 Le test de performance est éxécuté avec locust
 ```
