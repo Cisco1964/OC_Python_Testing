@@ -14,7 +14,7 @@ Création d'un environnement virtuel ENV
 git clone https://github.com/Cisco1964/OC_Python_Testing.git
 
 cd oc_python_testing
-python -m venv ENV
+python3 -m venv ENV
 ENV\Scripts\activate
 
 
